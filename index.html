@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>秘密の開花室 - Final Letter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Shippori+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* --- v26 BASE STYLES (The user's favorite UI) --- */
+html, body, * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+body { height: 100vh; overflow: hidden; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%); background-size: 200% 200%; animation: bgShift 20s ease infinite alternate; font-family: 'Shippori Mincho', serif; color: #334155; transition: background 1.5s ease, color 1.5s ease; }
+@keyframes bgShift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+
+body.state-roots { background: radial-gradient(circle at 50% 30%, #e0e7ff, #c7d2fe), linear-gradient(180deg, #e0e7ff 0%, #818cf8 100%); color: #312e81; }
+body.state-budding { background: radial-gradient(circle at 20% 20%, #fce7f3, transparent 50%), radial-gradient(circle at 80% 80%, #ffedd5, transparent 50%), linear-gradient(135deg, #fff1f2 0%, #fecdd3 100%); color: #881337; }
+body.state-blooming { background: radial-gradient(circle at 50% 0%, #fef9c3, transparent 70%), radial-gradient(circle at 100% 100%, #fbcfe8, transparent 40%), linear-gradient(135deg, #fefce8 0%, #fce7f3 100%); color: #4c0519; }
+body.state-silence { background: radial-gradient(circle at 50% 0%, #312e81, #1e1b4b 80%), #0f172a; color: #e2e8f0; }
+
+body:not([class*="state-"]).morning { background: linear-gradient(135deg, #e0f2fe, #ffedd5); color: #334155; }
+body:not([class*="state-"]).day { background: linear-gradient(135deg, #dbeafe, #eff6ff); color: #1e293b; }
+body:not([class*="state-"]).sunset { background: linear-gradient(135deg, #e9d5ff, #fdba74); color: #4c1d95; }
+body:not([class*="state-"]).night { background: radial-gradient(circle at center, #1e1b4b, #0f172a); color: #e2e8f0; }
+
+.artwork-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none !important; overflow: hidden; opacity: 0; transition: opacity 2s ease; }
+.artwork-container.active { opacity: 1; }
+.art-shape { position: absolute; border-radius: 50%; filter: blur(40px); opacity: 0.6; }
+.art-roots .shape1 { width: 250px; height: 250px; background: rgba(255,255,255,0.8); top: 30%; left: 50%; transform: translate(-50%, -50%); animation: floatGentle 8s ease-in-out infinite; }
+.art-roots .shape2 { width: 400px; height: 400px; background: rgba(99, 102, 241, 0.3); bottom: -100px; left: 10%; animation: breathe 10s ease-in-out infinite alternate; }
+.art-budding .shape1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(253,186,116,0.3) 70%); top: 10%; right: -150px; animation: rotateGently 40s linear infinite; }
+.art-budding .shape2 { width: 300px; height: 300px; background: rgba(244, 114, 182, 0.3); top: 60%; left: 5%; animation: pulseSoft 7s ease-in-out infinite alternate; }
+.art-blooming .sun { width: 700px; height: 700px; background: radial-gradient(circle, rgba(255,255,255,0.9) 10%, rgba(252,211,77,0.3) 60%, transparent 80%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulseRadiant 4s ease-in-out infinite alternate; }
+.art-blooming .ray-container { position: absolute; top: 50%; left: 50%; width: 0; height: 0; animation: rotateRays 60s linear infinite; }
+.art-blooming .ray { position: absolute; top: 0; left: 0; width: 4px; height: 120vh; background: linear-gradient(to top, transparent, rgba(255, 255, 255, 0.5), transparent); transform-origin: top center; margin-top: -60vh; }
+.art-silence .moon { width: 150px; height: 150px; background: #fff; border-radius: 50%; top: 20%; right: 10%; box-shadow: 0 0 60px rgba(255,255,255,0.8); animation: floatGentle 10s infinite; }
+.art-silence .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle 3s infinite; }
+
+@keyframes floatGentle { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-30px); } }
+@keyframes breathe { from { transform: scale(1); opacity: 0.3; } to { transform: scale(1.2); opacity: 0.5; } }
+@keyframes rotateGently { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes pulseSoft { from { transform: scale(1); opacity: 0.4; } to { transform: scale(1.3); opacity: 0.7; } }
+@keyframes pulseRadiant { from { transform: translate(-50%, -50%) scale(1); opacity: 0.7; } to { transform: translate(-50%, -50%) scale(1.15); opacity: 1; } }
+@keyframes rotateRays { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+
+.vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, transparent 30%, rgba(255, 255, 255, 0.5) 100%); mix-blend-mode: overlay; z-index: 1; pointer-events: none !important; }
+body.night .vignette, body.state-silence .vignette { background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.3) 100%); }
+
+.container { position: relative; z-index: 100; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 10vh; pointer-events: auto; overflow: hidden; transition: padding-top 0.5s ease; }
+.container.result-mode { overflow-y: auto; -webkit-overflow-scrolling: touch; height: 100%; padding-top: 5vh !important; padding-bottom: 50px; display: block; text-align: center; }
+
+.mist-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 1); z-index: 9999; pointer-events: none; transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1); }
+.mist-layer.cleared { opacity: 0; }
+
+.top-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: opacity 0.8s ease, transform 0.8s ease; z-index: 102; opacity: 1; pointer-events: auto; }
+.hidden { opacity: 0 !important; pointer-events: none !important; transform: scale(0.95); display: none; }
+
+.app-title { font-size: clamp(2rem, 8vw, 2.8rem); font-weight: 500; letter-spacing: 0.3rem; margin-bottom: 0.5rem; text-shadow: 0 2px 15px rgba(255,255,255,0.6); }
+.app-subtitle { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.3rem; opacity: 0.8; margin-bottom: 3rem; text-transform: uppercase; }
+
+.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 4vw, 24px); width: 100%; max-width: 500px; padding: 0 15px; }
+.theme-btn {
+    aspect-ratio: 1; border-radius: 45% 55% 40% 60% / 55% 45% 60% 40%;
+    background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    color: #1e293b; font-weight: 600; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    font-family: 'Shippori Mincho', serif;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, floatPebble 6s ease-in-out infinite alternate, lightWave 6s ease-in-out infinite;
+}
+.theme-btn span { font-size: 1.8rem; }
+.theme-btn.secret { display: none; background: rgba(76, 29, 149, 0.3); border-color: rgba(167, 139, 250, 0.5); color: #fff; }
+.theme-btn:nth-child(1) { animation-delay: 1.0s; } .theme-btn:nth-child(2) { animation-delay: 1.1s; border-radius: 55% 45% 60% 40% / 40% 60% 45% 55%; }
+.theme-btn:nth-child(3) { animation-delay: 1.2s; border-radius: 40% 60% 45% 55% / 60% 40% 55% 45%; }
+.theme-btn:nth-child(4) { animation-delay: 1.3s; border-radius: 50% 50% 40% 60% / 50% 60% 50% 40%; }
+.theme-btn:nth-child(5) { animation-delay: 1.4s; border-radius: 60% 40% 60% 40% / 40% 60% 40% 60%; }
+.theme-btn:nth-child(6) { animation-delay: 1.5s; border-radius: 45% 55% 50% 50% / 55% 45% 50% 50%; }
+.theme-btn:nth-child(7) { animation-delay: 1.6s; grid-column: 2; border-radius: 50%; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes floatPebble { 0% { transform: translateY(0); } 100% { transform: translateY(-5px); } }
+@keyframes lightWave {
+    0%, 100% { background: rgba(255, 255, 255, 0.4); box-shadow: 0 10px 20px rgba(0,0,0,0.03), inset 0 5px 15px rgba(255,255,255,0.9); border-color: rgba(255, 255, 255, 0.7); }
+    10% { background: rgba(255, 255, 255, 0.8); box-shadow: 0 10px 30px rgba(255,255,255,0.4), inset 0 0 20px rgba(255,255,255,1); border-color: #fff; }
+    20% { background: rgba(255, 255, 255, 0.4); box-shadow: 0 10px 20px rgba(0,0,0,0.03), inset 0 5px 15px rgba(255,255,255,0.9); border-color: rgba(255, 255, 255, 0.7); }
+}
+
+.question-screen { display: none; width: 90%; max-width: 450px; text-align: center; z-index: 101; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.question-screen.visible { display: block; animation: fadeUp 0.8s ease; }
+.question-card { background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); padding: 40px 20px; border-radius: 20px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+.question-text { font-size: 1.5rem; margin: 0; line-height: 1.8; font-weight: 500; animation: breathingText 6s ease-in-out infinite alternate; }
+@keyframes breathingText { 0% { opacity: 0.85; transform: scale(0.99); } 100% { opacity: 1; transform: scale(1.01); } }
+.pearl-path { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+.pearl-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(255, 255, 255, 0.6); transition: all 0.5s ease; }
+.pearl-dot.active { background: #fff; transform: scale(1.3); }
+.pearl-dot.passed { background: rgba(255,255,255,0.8); }
+.slider-container { display: flex; justify-content: center; gap: 15px; align-items: center; }
+.slider-btn { width: 90px; height: 90px; border-radius: 45% 55% 40% 60% / 55% 45% 60% 40%; background: rgba(255, 255, 255, 0.65); border: 2px solid rgba(255,255,255,0.8); font-family: 'Shippori Mincho', serif; font-size: 0.8rem; cursor: pointer; color: #475569; font-weight: 500; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; user-select: none; -webkit-tap-highlight-color: transparent; }
+.slider-btn:hover { transform: translateY(-5px) scale(1.08); background: #fff; }
+.slider-btn.active { transform: scale(1.15); background: #fff; border-color: #ec4899; color: #ec4899; pointer-events: none; }
+
+.affirmation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 400; pointer-events: none; display: flex; justify-content: center; align-items: center; transition: background 0.8s ease; }
+.affirmation-overlay.active { background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(8px); }
+.affirmation-text { font-size: 2rem; font-weight: 500; color: #be185d; opacity: 0; transform: scale(0.9) translateY(10px); transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); mix-blend-mode: multiply; }
+.affirmation-overlay.active .affirmation-text { opacity: 1; transform: scale(1) translateY(0); }
+
+.ripple { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.6); transform: scale(0); animation: rippleEffect 0.8s linear; pointer-events: none; z-index: 999; }
+@keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
+
+.reveal-overlay { position: fixed; inset: 0; z-index: 500; display: none; pointer-events: none; }
+.reveal-overlay.active { display: block; }
+.reveal-backdrop { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(20, 25, 50, 0.98), #020617 90%); opacity: 0; transition: opacity 1.2s ease; }
+.reveal-overlay.active .reveal-backdrop { opacity: 1; }
+.reveal-center { position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%); text-align: center; opacity: 0; transition: opacity 1.2s ease; z-index: 510; }
+.reveal-overlay.active .reveal-center { opacity: 1; }
+.reveal-orb { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(from 0deg, #fff, #fde047, #fff); box-shadow: 0 0 80px rgba(255,255,255,0.5); margin: 0 auto; opacity: 0; transition: transform 1.2s; }
+.reveal-overlay.active .reveal-orb { opacity: 1; animation: orbSpin 3s linear infinite; }
+.reveal-flash { position: absolute; left: 50%; top: 48%; width: 150vmax; height: 150vmax; border-radius: 50%; background: #fff; opacity: 0; transform: translate(-50%, -50%) scale(0); pointer-events: none; z-index: 600; }
+.reveal-flash.on { animation: flashPop 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes orbSpin { 100% { transform: rotate(360deg); } }
+@keyframes flashPop { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(0.1); } 50% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); } }
+
+.result-header { text-align: center; margin: 10px auto 30px; opacity: 0; transform: translateY(20px); transition: all 1s ease 0.5s; display: none; width: 100%; }
+.result-header.visible { opacity: 1; transform: translateY(0); display: block; }
+
+/* Gem Styles */
+.gem-container { width: 100px; height: 100px; margin: 0 auto 15px; position: relative; perspective: 800px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.5)); display: none; }
+.gem-container.visible { display: block; animation: floatGem 6s ease-in-out infinite; }
+.gem-mini { width: 60px; height: 60px; position: relative; perspective: 800px; }
+.gem-mini .gem-base { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; }
+.gem-base { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; }
+.gem-roots .gem-base { background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(99, 102, 241, 0.6) 60%, rgba(49, 46, 129, 0.8)); border-radius: 0 50% 50% 50%; transform: rotate(45deg); }
+.gem-budding .gem-base { background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.9), rgba(244, 114, 182, 0.6) 50%, rgba(131, 24, 67, 0.5)); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+.gem-blooming .gem-base { width: 80%; height: 80%; top: 10%; left: 10%; background: conic-gradient(from 0deg, #fcd34d, #fff, #f59e0b, #fff, #fcd34d); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.gem-silence .gem-base { background: radial-gradient(circle at 30% 30%, #fff, #a78bfa 50%, #4c1d95); border-radius: 50%; box-shadow: 0 0 10px rgba(167, 139, 250, 0.6); }
+.gem-container.gem-roots .gem-base { animation: gemSpinSlow 12s linear infinite; }
+.gem-container.gem-budding .gem-base { animation: gemWobble 8s ease-in-out infinite; }
+.gem-container.gem-blooming .gem-base { animation: gemRotate 15s linear infinite; }
+.gem-container.gem-silence .gem-base { animation: breathe 4s ease-in-out infinite; }
+@keyframes gemSpinSlow { 0% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.05); } 100% { transform: rotate(45deg) scale(1); } }
+@keyframes gemWobble { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes gemRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes floatGem { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+.main-title { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.8); letter-spacing: 0.15rem; margin-bottom: 5px; color: inherit; }
+.sub-info { font-size: 0.85rem; opacity: 0.8; font-family: 'Cinzel', serif; letter-spacing: 0.1rem; }
+.result-content { background: radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.0) 80%); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); width: 100%; max-width: 600px; margin: 0 auto; padding: 0 20px 80px 20px; max-height: none; overflow: visible; border: none; box-shadow: none; border-radius: 0; opacity: 0; transform: translateY(30px); transition: opacity 1s ease 1s, transform 1s ease 1s; display: none; }
+.result-content.visible { opacity: 1; transform: translateY(0); display: block; }
+.stagger-reveal { opacity: 0; transform: translateY(10px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.stagger-reveal.shown { opacity: 1; transform: translateY(0); }
+
+/* --- SOUL LETTER STYLES (IMPROVED for Poetic Layout inside box) --- */
+.msg-letter-container { 
+    background: rgba(255, 255, 255, 0.6); 
+    padding: 30px; 
+    border-radius: 8px; 
+    margin-bottom: 40px; 
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,0.8);
+    /* Subtle paper texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.2'/%3E%3C/svg%3E");
+}
+.msg-letter-container::before {
+    content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px solid rgba(0,0,0,0.05); pointer-events: none;
+}
+.msg-header { margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 15px; }
+.msg-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #64748b; letter-spacing: 0.1rem; text-transform: uppercase; font-weight: 600; }
+.msg-invocation {
+    font-size: 1.1rem; color: #475569; font-style: italic; margin-bottom: 25px;
+    font-family: 'Shippori Mincho', serif; opacity: 0.8;
+}
+.msg-essence {
+    font-size: 1.15rem; line-height: 2.2; color: #1e293b; margin-bottom: 30px; 
+    font-weight: 500; text-align: justify;
+}
+.msg-blessing {
+    font-size: 1.1rem; color: #be185d; font-weight: 600; text-align: center;
+    padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05);
+    line-height: 1.8;
+}
+
+.fortune-section { border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 30px; text-align: center; margin-bottom: 40px; }
+.fortune-label { font-family: 'Cinzel', serif; font-size: 0.8rem; color: #64748b; letter-spacing: 0.2rem; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
+.fortune-name { font-size: 1.5rem; font-weight: 600; color: #0f172a; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(255,255,255,0.8); }
+.fortune-desc { font-size: 1rem; color: #475569; font-weight: 500; }
+.wise-section { background: rgba(255,255,255,0.3); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+.wise-quote { font-size: 1.1rem; font-weight: 600; color: #1e293b; line-height: 1.8; margin-bottom: 15px; font-style: italic; }
+.wise-author { font-size: 0.9rem; color: #64748b; text-align: right; font-weight: 500; }
+.action-grid { display: flex; gap: 15px; justify-content: center; margin-top: 30px; position: relative; z-index: 1000 !important; }
+.btn-sub { padding: 12px 30px; border-radius: 30px; background: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.9); color: #334155; font-family: 'Shippori Mincho', serif; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; z-index: 1001; pointer-events: auto; }
+.btn-sub:hover { background: #fff; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.btn-sub:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.toast-notification { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(50px); background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.9); padding: 16px 24px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 0 10px rgba(255,255,255,0.8); color: #334155; font-family: 'Shippori Mincho', serif; font-size: 0.95rem; font-weight: 600; text-align: center; opacity: 0; transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 2000; pointer-events: none; white-space: pre-line; }
+.toast-notification.active { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.sound-toggle { position: fixed; bottom: 20px; right: 20px; width: 44px; height: 44px; background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50%; color: #475569; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3000; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.sound-toggle:hover { background: rgba(255, 255, 255, 0.6); transform: scale(1.1); }
+.sound-toggle.active { background: rgba(255, 255, 255, 0.8); color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.3); }
+
+/* Jewel Box */
+.jewel-btn { position: fixed; top: 20px; right: 20px; font-size: 1.5rem; background: transparent; border: none; cursor: pointer; opacity: 0.8; z-index: 2000; transition: transform 0.3s; filter: drop-shadow(0 0 5px rgba(255,255,255,0.8)); }
+.jewel-btn:hover { transform: scale(1.1) rotate(10deg); opacity: 1; }
+.collection-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5000; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+.collection-modal.visible { opacity: 1; pointer-events: auto; }
+.collection-card { width: 90%; max-width: 500px; background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; height: 80vh; overflow-y: auto; text-align: center; box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 0 40px rgba(0,0,0,0.5); color: #e2e8f0; }
+.col-title { font-family: 'Shippori Mincho', serif; font-size: 1.4rem; color: #f1f5f9; margin-bottom: 20px; font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.3); }
+.col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+.col-item { aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.5; transition: all 0.3s; position: relative; border: 1px solid rgba(255,255,255,0.05); }
+.col-item.acquired { opacity: 1; background: rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+.col-item:not(.acquired) .gem-mini { filter: grayscale(100%) brightness(50%) blur(2px); opacity: 0.6; }
+.col-label { font-size: 0.65rem; color: #94a3b8; font-family: 'Cinzel', serif; margin-top: 8px; letter-spacing: 0.1em; }
+.col-btn-close { padding: 10px 30px; background: transparent; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; cursor: pointer; font-family: 'Shippori Mincho', serif; font-weight: 600; transition: all 0.3s; }
+.col-btn-close:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+
+.share-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; background: rgba(20, 30, 50, 0.6); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.share-modal.visible { opacity: 1; pointer-events: auto; }
+.share-card { background: #fff; width: 90%; max-width: 400px; padding: 30px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.share-modal.visible .share-card { transform: scale(1); }
+.share-title { font-family: 'Shippori Mincho', serif; font-size: 1.2rem; margin-bottom: 15px; color: #1e293b; font-weight: 600; }
+.share-area { width: 100%; height: 120px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; font-family: sans-serif; font-size: 0.9rem; color: #475569; resize: none; background: #f8fafc; margin-bottom: 20px; outline: none; }
+.share-area:focus { border-color: #ec4899; background: #fff; }
+.modal-actions { display: flex; gap: 10px; justify-content: center; }
+.modal-btn { padding: 10px 20px; border-radius: 20px; border: none; font-weight: 600; cursor: pointer; font-family: 'Shippori Mincho', serif; transition: all 0.2s; }
+.modal-btn.cancel { background: #f1f5f9; color: #64748b; }
+.modal-btn.copy { background: #ec4899; color: #fff; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3); }
+</style>
+</head>
+<body>
+
+<div id="mist-layer" class="mist-layer"></div>
+<div id="art-layer" class="artwork-container"></div>
+<div id="ambient-layer" class="particle-container" style="z-index: 50;"></div>
+<div id="particle-container" class="particle-container"></div>
+<div id="reveal-overlay" class="reveal-overlay" aria-hidden="true"><div class="reveal-backdrop"></div><div class="reveal-center"><div style="font-family:'Cinzel', serif; font-size:.7rem; letter-spacing:.3rem; color:rgba(255,255,255,0.5); margin-bottom:20px;">SECRETS OF THE BLOOMER</div><div id="reveal-line" style="font-size:1.1rem; color:#f8fafc; text-shadow:0 0 10px rgba(255,255,255,0.5); margin-bottom:25px; white-space:pre-line;">光の結晶へ…</div><div class="reveal-orb" id="main-orb"></div></div><div id="reveal-flash" class="reveal-flash"></div></div>
+<div class="vignette"></div>
+<div id="affirmation-overlay" class="affirmation-overlay"><div id="affirmation-text" class="affirmation-text"></div></div>
+<div id="share-toast" class="toast-notification"></div>
+
+<button id="sound-btn" class="sound-toggle" onclick="toggleSound()">🔇</button>
+<button class="jewel-btn" onclick="openCollection()">💎</button>
+
+<div id="collection-modal" class="collection-modal">
+    <div class="collection-card">
+        <div class="col-title">私の宝石箱</div>
+        <div id="col-grid" class="col-grid"></div>
+        <button class="col-btn-close" onclick="closeCollection()">閉じる</button>
+    </div>
+</div>
+
+<div id="share-modal" class="share-modal">
+    <div class="share-card">
+        <div class="share-title">言葉を持ち帰る</div>
+        <textarea id="share-text-area" class="share-area" readonly></textarea>
+        <div class="modal-actions">
+            <button class="modal-btn cancel" onclick="closeShareModal()">閉じる</button>
+            <button class="modal-btn copy" onclick="copyShareText()">コピーする</button>
+        </div>
+    </div>
+</div>
+
+<div id="main-container" class="container">
+    <div id="top-screen" class="top-screen">
+        <div class="app-title">秘密の開花室</div>
+        <div class="app-subtitle">SECRETS OF THE BLOOMER</div>
+        <div class="theme-grid">
+            <button class="theme-btn" onclick="startDiagnosis('Genesis')"><span>🌱</span>始まりの<br>予感</button>
+            <button class="theme-btn" onclick="startDiagnosis('Libra')"><span>⚖️</span>真実の<br>天秤</button>
+            <button class="theme-btn" onclick="startDiagnosis('Passion')"><span>🌹</span>薔薇の<br>棘</button>
+            <button class="theme-btn" onclick="startDiagnosis('Cradle')"><span>🌙</span>月の<br>揺りかご</button>
+            <button class="theme-btn" onclick="startDiagnosis('Release')"><span>🍃</span>風の<br>通り道</button>
+            <button class="theme-btn" onclick="startDiagnosis('Purify')"><span>💧</span>涙の<br>浄化</button>
+            <button id="secret-btn" class="theme-btn secret" onclick="startDiagnosis('Abyss')"><span>🌌</span>深淵の<br>鏡</button>
+        </div>
+    </div>
+
+    <div id="question-screen" class="question-screen">
+        <div class="pearl-path"><div class="pearl-dot" id="dot-0"></div><div class="pearl-dot" id="dot-1"></div><div class="pearl-dot" id="dot-2"></div><div class="pearl-dot" id="dot-3"></div></div>
+        <div class="question-card"><div id="q-text" class="question-text"></div></div>
+        <div class="slider-container">
+            <button class="slider-btn" onclick="answer('No')">😌<br>まだ<br>遠い</button>
+            <button class="slider-btn" onclick="answer('Undecided')">😶<br>揺らい<br>でる</button>
+            <button class="slider-btn" onclick="answer('Yes')">✨<br>そう<br>感じる</button>
+        </div>
+    </div>
+
+    <div id="result-header" class="result-header">
+        <div id="res-gem" class="gem-container"><div class="gem-base"></div></div>
+        <div id="res-title" class="main-title">輝く結晶</div>
+        <div id="res-sub" class="sub-info">満開の庭 (10/10)</div>
+    </div>
+
+    <div id="result-content" class="result-content">
+        <div id="msg-box" class="stagger-reveal"></div>
+        <div class="fortune-section stagger-reveal"><div class="fortune-label">Your Amulet</div><div id="item-name" class="fortune-name"></div><div id="item-desc" class="fortune-desc"></div></div>
+        <div class="wise-section stagger-reveal"><div class="fortune-label">Muse's Whisper</div><div id="wise-text" class="wise-quote"></div><div id="wise-author" class="wise-author"></div></div>
+        <div class="action-grid stagger-reveal">
+            <button class="btn-sub" onclick="softReset()">時を戻す</button>
+            <button class="btn-sub" onclick="shareResult()">シェア</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const SoundEngine = {
+    ctx: null, isMuted: true, ambientOscs: [],
+    init: function() { if (!this.ctx) { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } },
+    resume: function() { if (this.ctx && this.ctx.state === 'suspended') { this.ctx.resume(); } },
+    playClick: function() { try { if (this.isMuted || !this.ctx) return; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.frequency.setValueAtTime(600, this.ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1); gain.gain.setValueAtTime(0.5, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.1); } catch(e){} },
+    playPaper: function(progressRatio) { try { if (this.isMuted || !this.ctx) return; const bufferSize = this.ctx.sampleRate * 0.1; const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate); const data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1; const noise = this.ctx.createBufferSource(); noise.buffer = buffer; noise.playbackRate.value = 1.0 + (progressRatio * 1.0); const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1000 + (progressRatio * 1000); const gain = this.ctx.createGain(); gain.gain.setValueAtTime(0.2, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05); noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination); noise.start(); } catch(e){} },
+    playReveal: function() { try { if (this.isMuted || !this.ctx) return; const freqs = [523.25, 659.25, 783.99, 1046.50]; freqs.forEach((f, i) => { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.frequency.value = f; gain.gain.setValueAtTime(0, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0.1, this.ctx.currentTime + 0.5 + (i*0.1)); gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 4.0); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 4.5); }); } catch(e){} },
+    startAmbient: function() { try { if (!this.ctx) return; this.stopAmbient(); const f1 = 100, f2 = 102; [f1, f2].forEach(f => { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.frequency.value = f; gain.gain.setValueAtTime(0, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0.03, this.ctx.currentTime + 4); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); this.ambientOscs.push({osc, gain}); }); } catch(e){} },
+    stopAmbient: function() { this.ambientOscs.forEach(o => { try { o.gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 1); o.osc.stop(this.ctx.currentTime + 1.1); } catch(e){} }); this.ambientOscs = []; }
+};
+function toggleSound() { const btn = document.getElementById('sound-btn'); SoundEngine.init(); SoundEngine.resume(); SoundEngine.isMuted = !SoundEngine.isMuted; if (!SoundEngine.isMuted) { btn.textContent = '🔊'; btn.classList.add('active'); SoundEngine.startAmbient(); showToast("音の世界に入りました。\nイヤホン推奨です🎧"); } else { btn.textContent = '🔇'; btn.classList.remove('active'); SoundEngine.stopAmbient(); } }
+
+const slider3 = {No:1, Undecided:3, Yes:5};
+function pulse(ms) { if (navigator.vibrate) { try { navigator.vibrate(ms); } catch(e) {} } }
+const questionPools = {
+  Genesis: ['新しい季節の匂いを、\n恐れずに吸い込める？', '昨日の自分とは違う靴を\n履いてみたい気分？', '嵐のあとの静けさを、\n心地よいと感じる？', 'その小さな蕾は、\n誰のためでもなく咲こうとしている？'],
+  Libra: ['その迷いは、\nあなたを深くするための時間？', 'コインの裏側にある本音に、\n気づいている？', '正しさよりも、\n美しさを選びたいと願う？', '天秤の揺れは、\n生きている証拠だと思える？'],
+  Passion: ['鏡の中の瞳に、\n嘘をつかずにいられる？', '誰かのための優しさを、\n自分にも向けてあげたい？', 'その傷跡は、\nあなたが戦った証だと思える？', '愛される資格なんて、\n探さなくてもここにあると信じる？'],
+  Cradle: ['今日一日、\nよく戦ったと自分を褒めてあげられる？', '毛布の温もりに、\nすべてを預けてもいい？', '眠りは、\n明日への逃避ではなく、準備だと思える？', '子供の頃のように、\nただ無心でいたい瞬間がある？'],
+  Release: ['その荷物は、\nもう地面に置いてもいい頃？', 'さよならを言うことは、\n新しい出会いの始まりだと思える？', '風が、\n古いページをめくってくれたと感じる？', '過去の自分を、\n笑顔で見送ることができる？'],
+  Purify: ['心の中に、\n澱のように溜まった言葉はある？', '雨音を聴くと、\nなぜか許されたような気がする？', 'その悲しみは、\n宝石に変えられる予感がする？', '今、透明になりたいと願っている？'],
+  Abyss: ['闇の中にこそ、\n本当の光があると感じる？', '孤独は、\n寂しさではなく自由の別名？', '誰にも理解されない部分こそ、\n美しいと思える？', '夜明け前の静寂を、\n誰かと共有したい？']
+};
+let currentQuestions = [];
+function selectQuestions(theme) { const pool = questionPools[theme] || questionPools['Genesis']; return pool.slice(0, 4); } 
+
+// --- SOUL LETTER DB (Fully Deepened with Titles from Design Discussion) ---
+const soulLetters = {
+  roots: {
+    title: "The Silent Roots",
+    inv: "星屑を数えるように、不安を数えてしまった夜へ。",
+    ess: "今は、無理に顔を上げる必要はありません。植物が根を伸ばすとき、それは必ず暗闇の中で行われます。あなたが感じている停滞は、実は猛烈な成長の準備期間なのです。誰にも見えない場所で戦っているあなたを、私だけは知っています。",
+    bless: "今夜は、何かひとつだけ『やらないこと』を決めてください。そして、深く息を吐くことだけに集中して。夜明けは、あなたが呼ばなくても必ず訪れます。"
+  },
+  budding: {
+    title: "The First Bud",
+    inv: "かすかな予感に、心が揺れているあなたへ。",
+    ess: "そのドキドキする感覚は、新しい季節のノックです。怖がらなくて大丈夫。変化は、いつも最初は『違和感』としてやってきます。あなたは今、古い殻を脱ぎ捨てて、新しい翼を広げようとしているのです。その揺らぎさえも、香水のように纏（まと）ってしまいましょう。",
+    bless: "明日、一番最初に目に入った美しいものを覚えておいて。それが、世界からあなたへの招待状です。準備はもう、整っていますよ。"
+  },
+  blooming: {
+    title: "The Golden Bloom",
+    inv: "光を浴びて、世界を照らす準備ができたあなたへ。",
+    ess: "素晴らしい輝きです。今のあなたは、誰かの許可を待つ必要はありません。あなたの存在そのものが、周囲へのギフトになっていることに気づいてください。自信過剰だなんて思わないで。花が咲くのに、遠慮なんていらないのですから。",
+    bless: "その溢れるエネルギーを、ひとつだけ『誰かのため』に使ってみて。それは巡り巡って、さらに大きな光となってあなたに返ってくるでしょう。さあ、胸を張って。"
+  },
+  silence: {
+    title: "The Midnight Mirror",
+    inv: "誰にも言えない孤独を、宝石のように抱くあなたへ。",
+    ess: "夜の静寂（しじま）は、選ばれた人だけに許された聖域です。孤独であることは、寂しいことではありません。それは、自分自身の魂と対話できる、最も自由な時間なのです。闇の中にこそ、本当の光がある。あなたはそれを、もう知っているはずです。",
+    bless: "今夜は、窓を少しだけ開けて、風の音に名前をつけてあげてください。その静けさが、明日あなたを守る『見えない盾』になります。おやすみなさい、美しき旅人よ。"
+  }
+};
+
+const fortuneItems = {
+  Genesis: [{item:'🌿 白紙のノート', desc:'無限の物語を描くために'}],
+  Libra: [{item:'⚖️ 銀のコイン', desc:'運命は裏表でできている'}],
+  Passion: [{item:'🌹 棘のある薔薇', desc:'痛みを知る美しさ'}],
+  Cradle: [{item:'🌙 羊毛の毛布', desc:'世界からあなたを守る盾'}],
+  Release: [{item:'🍃 乾燥した葉', desc:'役目を終えた美しさ'}],
+  Purify: [{item:'💧 クリスタルの杯', desc:'涙を受け止める器'}],
+  Abyss: [{item:'🌌 黒曜石', desc:'真実を映す鏡'}]
+};
+const femaleIcons = {
+  roots: [{text:"平和は微笑みから始まります。", author:"Mother Teresa"}],
+  blooming: [{text:"不可能なことなんてないわ。", author:"Audrey Hepburn"}]
+};
+const desireQuotes = [
+  {text:"私がルールよ。", author:"Noble Cat"},
+  {text:"撫でさせてあげてもよろしくてよ。", author:"Noble Cat"},
+  {text:"美しいものしか見たくないの。", author:"Noble Cat"},
+  {text:"お昼寝は義務ではなく権利よ。", author:"Noble Cat"}
+];
+
+let currentTheme = '', currentQ = 0, answers = [];
+let ambientInterval = null;
+let isTransitioning = false; 
+
+// Collection Logic
+let collection = JSON.parse(localStorage.getItem('bloomerCollection')) || {};
+function saveCollection(theme, level) {
+    const key = `${theme}-${level}`;
+    collection[key] = true;
+    localStorage.setItem('bloomerCollection', JSON.stringify(collection));
+}
+function openCollection() {
+    const grid = document.getElementById('col-grid');
+    grid.innerHTML = '';
+    const themes = ['Genesis','Libra','Passion','Cradle','Release','Purify'];
+    const displayNames = {'Genesis':'始まり','Libra':'天秤','Passion':'薔薇','Cradle':'揺りかご','Release':'風','Purify':'浄化'};
+    const levels = ['roots', 'budding', 'blooming'];
+
+    themes.forEach(t => {
+        levels.forEach(l => {
+            const key = `${t}-${l}`;
+            const acquired = collection[key];
+            const div = document.createElement('div');
+            div.className = `col-item ${acquired ? 'acquired' : ''}`;
+            const miniGem = document.createElement('div');
+            miniGem.className = `gem-mini gem-${l}`;
+            miniGem.innerHTML = '<div class="gem-base"></div>';
+            div.appendChild(miniGem);
+            div.innerHTML += `<div class="col-label">${displayNames[t]}</div>`;
+            grid.appendChild(div);
+        });
+    });
+    if(collection['Abyss-silence']) {
+         const div = document.createElement('div');
+         div.className = 'col-item acquired';
+         const miniGem = document.createElement('div');
+         miniGem.className = `gem-mini gem-silence`;
+         miniGem.innerHTML = '<div class="gem-base"></div>';
+         div.appendChild(miniGem);
+         div.innerHTML += `<div class="col-label">深淵</div>`;
+         grid.appendChild(div);
+    }
+    document.getElementById('collection-modal').classList.add('visible');
+}
+function closeCollection() { document.getElementById('collection-modal').classList.remove('visible'); }
+
+window.addEventListener('load', () => { 
+    setTimeout(() => { document.getElementById('mist-layer').classList.add('cleared'); setTimeout(() => document.getElementById('mist-layer').style.display = 'none', 2000); }, 100); 
+    checkMidnight();
+});
+
+function checkMidnight() {
+    const h = new Date().getHours();
+    if (h >= 22 || h < 4) {
+        document.getElementById('secret-btn').style.display = 'flex';
+    }
+}
+function setInitialBackground() { const h = new Date().getHours(); document.body.className = ''; if(h >= 5 && h < 11) document.body.classList.add('morning'); else if(h >= 11 && h < 17) document.body.classList.add('day'); else if(h >= 17 && h < 20) document.body.classList.add('sunset'); else document.body.classList.add('night'); }
+setInitialBackground();
+
+function startDiagnosis(theme) { 
+    isTransitioning = false; pulse(10); SoundEngine.playClick(); const btn = event.target.closest('.theme-btn'); if(btn) { btn.classList.add('clicked'); setTimeout(() => btn.classList.remove('clicked'), 600); } currentTheme = theme; currentQ = 0; answers = []; currentQuestions = selectQuestions(theme); setTimeout(() => { document.getElementById('top-screen').classList.add('hidden'); document.getElementById('question-screen').classList.add('visible'); nextQuestion(); }, 300); }
+
+function updatePearlPath() { for(let i=0; i<4; i++) { const dot = document.getElementById(`dot-${i}`); if(i < currentQ) { dot.className = 'pearl-dot passed'; } else if(i === currentQ) { dot.className = 'pearl-dot active'; } else { dot.className = 'pearl-dot'; } } }
+function nextQuestion() { 
+    isTransitioning = false; 
+    if (currentQ >= 4) return playRevealThenShowResult(); 
+    document.getElementById('q-text').textContent = currentQuestions[currentQ]; 
+    updatePearlPath(); 
+    currentQ++; 
+}
+
+function createRipple(x, y) { const ripple = document.createElement('div'); ripple.className = 'ripple'; ripple.style.left = (x - 50) + 'px'; ripple.style.top = (y - 50) + 'px'; ripple.style.width = '100px'; ripple.style.height = '100px'; document.body.appendChild(ripple); setTimeout(() => ripple.remove(), 800); }
+function showAffirmation() { const overlay = document.getElementById('affirmation-overlay'); const textEl = document.getElementById('affirmation-text'); textEl.textContent = affirmations[Math.floor(Math.random() * affirmations.length)]; overlay.classList.add('active'); setTimeout(() => { textEl.style.opacity = '1'; textEl.style.transform = 'scale(1) translateY(0)'; }, 50); setTimeout(() => { textEl.style.opacity = '0'; textEl.style.transform = 'scale(0.9) translateY(10px)'; overlay.classList.remove('active'); }, 1200); }
+const affirmations = ["素敵です","そのままで","美しい","感じて","大切に"];
+
+function answer(val) {
+    if(isTransitioning) return; 
+    isTransitioning = true;
+
+    const watchdog = setTimeout(() => { if(isTransitioning) { isTransitioning = false; nextQuestion(); } }, 1200);
+    try { pulse(15); SoundEngine.playPaper(currentQ / 4); } catch(e) {}
+    answers.push(val); 
+    const btn = event.target.closest('.slider-btn'); 
+    if(btn) {
+        const rect = btn.getBoundingClientRect(); 
+        createRipple(rect.left + rect.width/2, rect.top + rect.height/2); 
+        document.querySelectorAll('.slider-btn').forEach(b => b.classList.remove('active')); 
+        btn.classList.add('active'); 
+    }
+    showAffirmation(); 
+    setTimeout(() => { clearTimeout(watchdog); if(btn) btn.classList.remove('active'); nextQuestion(); }, 800); 
+}
+
+let isRevealing = false;
+async function playRevealThenShowResult() { 
+    if (isRevealing) return; 
+    isRevealing = true; 
+    document.getElementById('reveal-overlay').classList.add('active'); 
+    const lines = ['星たちが、\nあなたを見守っている…', '魂の輪郭が、\n光を帯びていく…']; 
+    document.getElementById('reveal-line').innerText = lines[Math.floor(Math.random() * lines.length)]; 
+    await new Promise(r => setTimeout(r, 2000)); 
+    pulse(30); 
+    const flash = document.getElementById('reveal-flash'); 
+    flash.classList.remove('on'); 
+    void flash.offsetWidth; 
+    flash.classList.add('on'); 
+    await new Promise(r => setTimeout(r, 1000)); 
+    document.getElementById('reveal-overlay').classList.remove('active'); 
+    showResult(); 
+    isRevealing = false; 
+}
+
+function startAmbientAnimation(level) { const layer = document.getElementById('ambient-layer'); layer.innerHTML = ''; if (ambientInterval) clearInterval(ambientInterval); const createFunc = () => { const el = document.createElement('div'); el.style.position='absolute'; el.style.width='5px'; el.style.height='5px'; el.style.background='rgba(255,255,255,0.5)'; el.style.borderRadius='50%'; el.style.left = Math.random()*100+'vw'; el.style.top = Math.random()*100+'vh'; el.style.animation='floatUp 5s linear'; layer.appendChild(el); setTimeout(()=>el.remove(), 5000); }; ambientInterval = setInterval(createFunc, 800); }
+
+function showResult() {
+    pulse(50); SoundEngine.playReveal();
+    let total = 0; answers.forEach(a => total += slider3[a]);
+    const score = Math.round((total / 20) * 10);
+    let level = 'budding'; 
+    if (currentTheme === 'Abyss') level = 'silence';
+    else { if(score <= 4) level = 'roots'; else if(score >= 8) level = 'blooming'; }
+
+    saveCollection(currentTheme, level);
+
+    document.body.className = `state-${level}`;
+    const artLayer = document.getElementById('art-layer'); artLayer.className = `artwork-container art-${level} active`;
+    if(level === 'roots') artLayer.innerHTML = '<div class="art-shape shape1"></div><div class="art-shape shape2"></div>';
+    else if(level === 'budding') artLayer.innerHTML = '<div class="art-shape shape1"></div><div class="art-shape shape2"></div>';
+    else if(level === 'blooming') artLayer.innerHTML = '<div class="sun"></div><div class="ray-container">' + Array(12).fill(0).map((_,i)=>`<div class="ray" style="transform: rotate(${i*30}deg)"></div>`).join('') + '</div>';
+    else if(level === 'silence') artLayer.innerHTML = '<div class="moon"></div>' + Array(20).fill(0).map(()=>`<div class="star" style="top:${Math.random()*100}%;left:${Math.random()*100}%;width:${Math.random()*3}px;height:${Math.random()*3}px;animation-delay:${Math.random()*2}s"></div>`).join('');
+
+    startAmbientAnimation(level);
+    const crystalNames = {roots:'静かな青の結晶', budding:'温かいピンクの結晶', blooming:'輝く金の結晶', silence:'夜明け前の深紫'};
+    const stageName = {roots:'根を張る時期', budding:'つぼみの時期', blooming:'満開の庭', silence:'静寂の時間'};
+    document.getElementById('res-title').textContent = crystalNames[level];
+    document.getElementById('res-sub').textContent = `${currentTheme}の${stageName[level]}`;
+    const gemContainer = document.getElementById('res-gem'); gemContainer.className = `gem-container gem-${level} visible`;
+
+    // --- Soul Letter Rendering (Updated for Content Depth with Titles) ---
+    const letter = soulLetters[level] || soulLetters['roots'];
+    const letterHTML = `
+        <div class="msg-letter-container">
+            <div class="msg-header">
+                <div class="msg-title">${letter.title}</div>
+            </div>
+            <div class="msg-invocation">${letter.inv}</div>
+            <div class="msg-essence">${letter.ess}</div>
+            <div class="msg-blessing">${letter.bless}</div>
+        </div>
+    `;
+    document.getElementById('msg-box').innerHTML = letterHTML;
+
+    let items = fortuneItems[currentTheme] || fortuneItems['Purify']; const item = items[Math.floor(Math.random() * items.length)];
+    document.getElementById('item-name').textContent = item.item; document.getElementById('item-desc').textContent = item.desc;
+
+    let quote = null;
+    if (Math.random() < 0.05) {
+        quote = desireQuotes[Math.floor(Math.random() * desireQuotes.length)];
+    } else {
+        const wList = femaleIcons[level] || femaleIcons['roots'];
+        quote = wList[Math.floor(Math.random() * wList.length)];
+    }
+    document.getElementById('wise-text').textContent = `"${quote.text}"`; document.getElementById('wise-author').textContent = `— ${quote.author}`;
+
+    document.getElementById('question-screen').classList.remove('visible');
+    document.getElementById('main-container').classList.add('result-mode');
+    setTimeout(() => document.getElementById('result-header').classList.add('visible'), 300);
+    setTimeout(() => document.getElementById('result-content').classList.add('visible'), 600);
+    const reveals = document.querySelectorAll('.stagger-reveal'); reveals.forEach((el, index) => { setTimeout(() => el.classList.add('shown'), 800 + (index * 600)); });
+}
+
+function softReset() { isTransitioning = false; pulse(10); SoundEngine.playClick(); document.querySelectorAll('.stagger-reveal').forEach(el => el.classList.remove('shown')); window.scrollTo({top: 0, behavior: 'smooth'}); const container = document.getElementById('main-container'); container.scrollTo({top: 0, behavior: 'smooth'}); const mist = document.getElementById('mist-layer'); mist.style.display = 'block'; void mist.offsetWidth; mist.classList.remove('cleared'); setTimeout(() => { container.classList.remove('result-mode'); document.body.className = ''; setInitialBackground(); document.getElementById('result-header').classList.remove('visible'); document.getElementById('result-content').classList.remove('visible'); document.getElementById('res-gem').className = 'gem-container'; document.getElementById('top-screen').classList.remove('hidden'); document.getElementById('art-layer').className = 'artwork-container'; document.getElementById('art-layer').innerHTML = ''; document.getElementById('ambient-layer').innerHTML = ''; if(ambientInterval) clearInterval(ambientInterval); checkMidnight(); setTimeout(() => { mist.classList.add('cleared'); setTimeout(() => mist.style.display = 'none', 2000); }, 500); }, 1000); }
+
+function shareResult() {
+    pulse(15);
+    const title = document.getElementById('res-title').innerText;
+    const subTitle = document.getElementById('res-sub').innerText;
+    const quote = document.getElementById('wise-text').innerText;
+    const shareText = `✨ 秘密の開花室 - Final Letter\n\n今の私の心：\n💎 ${title} (${subTitle})\n\nMuse's Whisper:\n${quote}\n\n[https://www.gay4.me/flower]`;
+    if (navigator.share) { navigator.share({text: shareText}).then(() => showToast("言葉をポケットにしまいました。")).catch((err) => { if(err.name !== 'AbortError') openShareModal(shareText); }); } else { openShareModal(shareText); }
+}
+function openShareModal(text) { const modal = document.getElementById('share-modal'); const textArea = document.getElementById('share-text-area'); textArea.value = text; modal.classList.add('visible'); }
+function closeShareModal() { document.getElementById('share-modal').classList.remove('visible'); }
+function copyShareText() { const textArea = document.getElementById('share-text-area'); textArea.select(); textArea.setSelectionRange(0, 99999); try { navigator.clipboard.writeText(textArea.value).then(() => { showToast("コピーしました。\nSNSに貼り付けてください。"); closeShareModal(); }).catch(() => { document.execCommand('copy'); showToast("コピーしました。\nSNSに貼り付けてください。"); closeShareModal(); }); } catch(e) { showToast("テキストを長押しして\nコピーしてください。"); } }
+function showToast(message) { const toast = document.getElementById('share-toast'); toast.innerText = message; toast.classList.add('active'); setTimeout(() => toast.classList.remove('active'), 4000); }
+</script>
+</body>
+</html>
