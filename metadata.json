@@ -1,0 +1,8 @@
+{
+  "name": "秘密の開花室 - Final Letter",
+  "description": "心を開花させる対話型アミュレット診断とソウルレター体験",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
